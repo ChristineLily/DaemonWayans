@@ -60,7 +60,7 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 
 	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 
 	c := &config{}
 
@@ -72,10 +72,16 @@ func main() {
 	go func() {
 		for {
 			select {
-			case <-signalChan:
-				log.Printf("Got SIGINT/SIGTERM. Later fam!")
-				cancel()
-				os.Exit(1)
+			case s := <-signalChan:
+				switch s {
+				case syscall.SIGINT, syscall.SIGTERM:
+					log.Printf("Got SIGINT/SIGTERM. Later fam!")
+					cancel()
+					os.Exit(1)
+				case syscall.SIGHUP:
+					log.Printf("Got SIGHUP. We reloadin'")
+					c.init(os.Args)
+				}
 			case <-ctx.Done():
 				log.Printf("Dunzo.")
 				os.Exit(1)
