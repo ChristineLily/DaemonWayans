@@ -6,7 +6,6 @@ or any of the Wayans clan for that matter...this is just a daemon.
 
 ![Noted Polytalent Damon Wayans](damon_wayans.jpg "The real Damon Wayans")
 
-Roadmap {
-    add icon and uptime indicator to notification area/systray
-    create package on AUR
-}
+### Roadmap
+- Add icon/uptime indicator to notification area/systray
+- Create package for AUR
